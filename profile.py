@@ -287,7 +287,7 @@ cn_fake = request.RawPC("cn_fake")
 cn_fake.hardware_type = params.cn_node_type
 cn_fake.disk_image = UBUNTU_1804_IMG
 cn_fake.addService(rspec.Execute(shell="bash", command=DEPLOY_OPEN5GS))
-cn_fake_s1_if = cn.addInterface("cn_fake_s1_if")
+cn_fake_s1_if = cn_fake.addInterface("cn_fake_s1_if")
 cn_fake_s1_if.addAddress(rspec.IPv4Address("192.168.1.1", "255.255.255.0"))
 
 ue = request.RawPC("ue")
