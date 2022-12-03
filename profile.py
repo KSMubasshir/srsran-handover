@@ -283,6 +283,13 @@ cn.addService(rspec.Execute(shell="bash", command=DEPLOY_OPEN5GS))
 cn_s1_if = cn.addInterface("cn_s1_if")
 cn_s1_if.addAddress(rspec.IPv4Address("192.168.1.1", "255.255.255.0"))
 
+cn_fake = request.RawPC("cn_fake")
+cn_fake.hardware_type = params.cn_node_type
+cn_fake.disk_image = UBUNTU_1804_IMG
+cn_fake.addService(rspec.Execute(shell="bash", command=DEPLOY_OPEN5GS))
+cn_fake_s1_if = cn.addInterface("cn_fake_s1_if")
+cn_fake_s1_if.addAddress(rspec.IPv4Address("192.168.1.1", "255.255.255.0"))
+
 ue = request.RawPC("ue")
 ue.hardware_type = NUC_HWTYPE
 ue.component_id = params.ue_node
@@ -291,6 +298,7 @@ ue.disk_image = SRSLTE_IMG
 ue.Desire("rf-controlled", 1)
 ue_enb1_rf = ue.addInterface("ue_enb1_rf")
 ue_enb2_rf = ue.addInterface("ue_enb2_rf")
+ue_enb_fake_rf = ue.addInterface("ue_enb_fake_rf")
 ue.addService(rspec.Execute(shell="bash", command=DEPLOY_SRS))
 ue.addService(rspec.Execute(shell="bash", command=TUNE_CPU))
 
@@ -318,6 +326,18 @@ enb2_ue_rf = enb2.addInterface("enb2_ue_rf")
 enb2.addService(rspec.Execute(shell="bash", command=DEPLOY_SRS))
 enb2.addService(rspec.Execute(shell="bash", command=TUNE_CPU))
 
+enb_fake = request.RawPC("fake_enb")
+enb_fake.hardware_type = NUC_HWTYPE
+enb_fake.component_id = params.enb2_node
+
+enb_fake.disk_image = SRSLTE_IMG
+enb_fake_s1_if = enb_fake.addInterface("enb_fake_s1_if")
+enb_fake_s1_if.addAddress(rspec.IPv4Address("192.168.1.3", "255.255.255.0"))
+enb_fake.Desire("rf-controlled", 1)
+enb_fake_ue_rf = enb_fake.addInterface("enb_fake_ue_rf")
+enb_fake.addService(rspec.Execute(shell="bash", command=DEPLOY_SRS))
+enb_fake.addService(rspec.Execute(shell="bash", command=TUNE_CPU))
+
 # Create S1 links between eNodeBs and CN
 link = request.LAN("lan")
 link.addInterface(cn_s1_if)
@@ -327,6 +347,14 @@ link.link_multiplexing = True
 link.vlan_tagging = True
 link.best_effort = True
 
+
+fake_link = request.LAN("lan")
+fake_link.addInterface(cn_fake_s1_if)
+fake_link.addInterface(enb_fake_s1_if)
+fake_link.link_multiplexing = True
+fake_link.vlan_tagging = True
+fake_link.best_effort = True
+
 # Create RF links between the UE and eNodeBs
 rflink1 = request.RFLink("rflink1")
 rflink1.addInterface(enb1_ue_rf)
@@ -335,6 +363,10 @@ rflink1.addInterface(ue_enb1_rf)
 rflink2 = request.RFLink("rflink2")
 rflink2.addInterface(enb2_ue_rf)
 rflink2.addInterface(ue_enb2_rf)
+
+rflink_fake = request.RFLink("rflink_fake")
+rflink_fake.addInterface(enb_fake_ue_rf)
+rflink_fake.addInterface(ue_enb_fake_rf)
 
 tour = IG.Tour()
 tour.Description(IG.Tour.MARKDOWN, tourDescription)
