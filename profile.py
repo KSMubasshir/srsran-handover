@@ -348,7 +348,7 @@ link.vlan_tagging = True
 link.best_effort = True
 
 
-fake_link = request.LAN("lan")
+fake_link = request.LAN("fake_lan")
 fake_link.addInterface(cn_fake_s1_if)
 fake_link.addInterface(enb_fake_s1_if)
 fake_link.link_multiplexing = True
