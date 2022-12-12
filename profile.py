@@ -283,12 +283,12 @@ cn.addService(rspec.Execute(shell="bash", command=DEPLOY_OPEN5GS))
 cn_s1_if = cn.addInterface("cn_s1_if")
 cn_s1_if.addAddress(rspec.IPv4Address("192.168.1.1", "255.255.255.0"))
 
-cn_fake = request.RawPC("cn_fake")
+cn_fake = request.RawPC("fake_cn")
 cn_fake.hardware_type = params.cn_node_type
 cn_fake.disk_image = UBUNTU_1804_IMG
 cn_fake.addService(rspec.Execute(shell="bash", command=DEPLOY_OPEN5GS))
 cn_fake_s1_if = cn_fake.addInterface("cn_fake_s1_if")
-cn_fake_s1_if.addAddress(rspec.IPv4Address("192.168.1.1", "255.255.255.0"))
+cn_fake_s1_if.addAddress(rspec.IPv4Address("192.168.1.2", "255.255.255.0"))
 
 ue = request.RawPC("ue")
 ue.hardware_type = NUC_HWTYPE
@@ -301,13 +301,13 @@ ue_enb_fake_rf = ue.addInterface("ue_enb_fake_rf")
 ue.addService(rspec.Execute(shell="bash", command=DEPLOY_SRS))
 ue.addService(rspec.Execute(shell="bash", command=TUNE_CPU))
 
-enb1 = request.RawPC("enb1")
+enb1 = request.RawPC("enb")
 enb1.hardware_type = NUC_HWTYPE
 enb1.component_id = params.enb1_node
 
 enb1.disk_image = SRSLTE_IMG
 enb1_s1_if = enb1.addInterface("enb1_s1_if")
-enb1_s1_if.addAddress(rspec.IPv4Address("192.168.1.2", "255.255.255.0"))
+enb1_s1_if.addAddress(rspec.IPv4Address("192.168.1.3", "255.255.255.0"))
 enb1.Desire("rf-controlled", 1)
 enb1_ue_rf = enb1.addInterface("enb1_ue_rf")
 enb1.addService(rspec.Execute(shell="bash", command=DEPLOY_SRS))
@@ -319,7 +319,7 @@ enb_fake.component_id = params.enb2_node
 
 enb_fake.disk_image = SRSLTE_IMG
 enb_fake_s1_if = enb_fake.addInterface("enb_fake_s1_if")
-enb_fake_s1_if.addAddress(rspec.IPv4Address("192.168.1.3", "255.255.255.0"))
+enb_fake_s1_if.addAddress(rspec.IPv4Address("192.168.1.4", "255.255.255.0"))
 enb_fake.Desire("rf-controlled", 1)
 enb_fake_ue_rf = enb_fake.addInterface("enb_fake_ue_rf")
 enb_fake.addService(rspec.Execute(shell="bash", command=DEPLOY_SRS))
