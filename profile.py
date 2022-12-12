@@ -297,7 +297,6 @@ ue.component_id = params.ue_node
 ue.disk_image = SRSLTE_IMG
 ue.Desire("rf-controlled", 1)
 ue_enb1_rf = ue.addInterface("ue_enb1_rf")
-ue_enb2_rf = ue.addInterface("ue_enb2_rf")
 ue_enb_fake_rf = ue.addInterface("ue_enb_fake_rf")
 ue.addService(rspec.Execute(shell="bash", command=DEPLOY_SRS))
 ue.addService(rspec.Execute(shell="bash", command=TUNE_CPU))
@@ -347,8 +346,6 @@ rflink1 = request.RFLink("rflink1")
 rflink1.addInterface(enb1_ue_rf)
 rflink1.addInterface(ue_enb1_rf)
 
-rflink2 = request.RFLink("rflink2")
-rflink2.addInterface(ue_enb2_rf)
 
 rflink_fake = request.RFLink("rflink_fake")
 rflink_fake.addInterface(enb_fake_ue_rf)
