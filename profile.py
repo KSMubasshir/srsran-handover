@@ -264,7 +264,7 @@ pc.defineParameter("cn_node_type",
 pc.defineParameter("fake_cn_node_type",
                    "Type of compute node for Open5GS Fake CN",
                    portal.ParameterType.STRING,
-                   node_type[1],
+                   node_type[0],
                    node_type)
 
 pc.defineParameter("enb1_node", "PhantomNet NUC+B210 for first eNodeB",
