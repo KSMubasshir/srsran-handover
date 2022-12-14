@@ -261,8 +261,14 @@ pc.defineParameter("cn_node_type",
                    node_type[0],
                    node_type)
 
+pc.defineParameter("fake_cn_node_type",
+                   "Type of compute node for Open5GS Fake CN",
+                   portal.ParameterType.STRING,
+                   node_type[1],
+                   node_type)
+
 pc.defineParameter("enb1_node", "PhantomNet NUC+B210 for first eNodeB",
-                   portal.ParameterType.STRING, "nuc10", advanced=True,
+                   portal.ParameterType.STRING, "nuc2", advanced=True,
                    longDescription="Specific eNodeB node to bind to.")
 
 pc.defineParameter("enb2_node", "PhantomNet NUC+B210 for second eNodeB",
@@ -285,7 +291,7 @@ cn_s1_if = cn.addInterface("cn_s1_if")
 cn_s1_if.addAddress(rspec.IPv4Address("192.168.1.1", "255.255.255.0"))
 
 cn_fake = request.RawPC("fake_cn")
-cn_fake.hardware_type = params.cn_node_type
+cn_fake.hardware_type = params.fake_cn_node_type
 cn_fake.disk_image = UBUNTU_1804_IMG
 cn_fake.addService(rspec.Execute(shell="bash", command=DEPLOY_OPEN5GSFAKE))
 cn_fake_s1_if = cn_fake.addInterface("cn_fake_s1_if")
