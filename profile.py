@@ -240,6 +240,7 @@ adjust downlink attenuation levels to trigger more handover events.
 BIN_PATH = "/local/repository/bin"
 DEPLOY_SRS = os.path.join(BIN_PATH, "deploy-srs.sh")
 DEPLOY_OPEN5GS = os.path.join(BIN_PATH, "deploy-open5gs.sh")
+DEPLOY_OPEN5GSFAKE = os.path.join(BIN_PATH, "deploy-open5gsFake.sh")
 TUNE_CPU = os.path.join(BIN_PATH, "tune-cpu.sh")
 NUC_HWTYPE = "nuc5300"
 UBUNTU_1804_IMG = "urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU18-64-STD"
@@ -286,7 +287,7 @@ cn_s1_if.addAddress(rspec.IPv4Address("192.168.1.1", "255.255.255.0"))
 cn_fake = request.RawPC("fake_cn")
 cn_fake.hardware_type = params.cn_node_type
 cn_fake.disk_image = UBUNTU_1804_IMG
-cn_fake.addService(rspec.Execute(shell="bash", command=DEPLOY_OPEN5GS))
+cn_fake.addService(rspec.Execute(shell="bash", command=DEPLOY_OPEN5GSFAKE))
 cn_fake_s1_if = cn_fake.addInterface("cn_fake_s1_if")
 cn_fake_s1_if.addAddress(rspec.IPv4Address("192.168.1.2", "255.255.255.0"))
 
