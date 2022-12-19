@@ -268,7 +268,7 @@ pc.defineParameter("fake_cn_node_type",
                    node_type)
 
 pc.defineParameter("enb1_node", "PhantomNet NUC+B210 for first eNodeB",
-                   portal.ParameterType.STRING, "nuc2", advanced=True,
+                   portal.ParameterType.STRING, "nuc10", advanced=True,
                    longDescription="Specific eNodeB node to bind to.")
 
 pc.defineParameter("enb2_node", "PhantomNet NUC+B210 for second eNodeB",
