@@ -63,7 +63,7 @@ sudo srsenb /etc/srsran/enb1.conf
 
 ```
 # on enb2
-sudo srsenb /etc/srsran/enb2.conf
+sudo srsenb /etc/srsran/enbfake.conf
 ```
 
 You should see indications of S1 connection establishment for each eNB in the
@@ -272,6 +272,10 @@ pc.defineParameter("enb1_node", "PhantomNet NUC+B210 for first eNodeB",
                    longDescription="Specific eNodeB node to bind to.")
 
 pc.defineParameter("enb2_node", "PhantomNet NUC+B210 for second eNodeB",
+                   portal.ParameterType.STRING, "nuc3", advanced=True,
+                   longDescription="Specific eNodeB node to bind to.")
+
+pc.defineParameter("enbfake_node", "PhantomNet NUC+B210 for fake eNodeB",
                    portal.ParameterType.STRING, "nuc4", advanced=True,
                    longDescription="Specific eNodeB node to bind to.")
 
@@ -304,6 +308,7 @@ ue.component_id = params.ue_node
 ue.disk_image = SRSLTE_IMG
 ue.Desire("rf-controlled", 1)
 ue_enb1_rf = ue.addInterface("ue_enb1_rf")
+ue_enb2_rf = ue.addInterface("ue_enb2_rf")
 ue_enb_fake_rf = ue.addInterface("ue_enb_fake_rf")
 ue.addService(rspec.Execute(shell="bash", command=DEPLOY_SRS))
 ue.addService(rspec.Execute(shell="bash", command=TUNE_CPU))
@@ -320,13 +325,25 @@ enb1_ue_rf = enb1.addInterface("enb1_ue_rf")
 enb1.addService(rspec.Execute(shell="bash", command=DEPLOY_SRS))
 enb1.addService(rspec.Execute(shell="bash", command=TUNE_CPU))
 
+enb2 = request.RawPC("enb2")
+enb2.hardware_type = NUC_HWTYPE
+enb2.component_id = params.enb2_node
+
+enb2.disk_image = SRSLTE_IMG
+enb2_s1_if = enb2.addInterface("enb2_s1_if")
+enb2_s1_if.addAddress(rspec.IPv4Address("192.168.1.4", "255.255.255.0"))
+enb2.Desire("rf-controlled", 1)
+enb2_ue_rf = enb2.addInterface("enb2_ue_rf")
+enb2.addService(rspec.Execute(shell="bash", command=DEPLOY_SRS))
+enb2.addService(rspec.Execute(shell="bash", command=TUNE_CPU))
+
 enb_fake = request.RawPC("fake_enb")
 enb_fake.hardware_type = NUC_HWTYPE
-enb_fake.component_id = params.enb2_node
+enb_fake.component_id = params.enbfake_node
 
 enb_fake.disk_image = SRSLTE_IMG
 enb_fake_s1_if = enb_fake.addInterface("enb_fake_s1_if")
-enb_fake_s1_if.addAddress(rspec.IPv4Address("192.168.1.4", "255.255.255.0"))
+enb_fake_s1_if.addAddress(rspec.IPv4Address("192.168.1.5", "255.255.255.0"))
 enb_fake.Desire("rf-controlled", 1)
 enb_fake_ue_rf = enb_fake.addInterface("enb_fake_ue_rf")
 enb_fake.addService(rspec.Execute(shell="bash", command=DEPLOY_SRS))
@@ -336,6 +353,7 @@ enb_fake.addService(rspec.Execute(shell="bash", command=TUNE_CPU))
 link = request.LAN("lan")
 link.addInterface(cn_s1_if)
 link.addInterface(enb1_s1_if)
+link.addInterface(enb2_s1_if)
 link.link_multiplexing = True
 link.vlan_tagging = True
 link.best_effort = True
@@ -352,6 +370,10 @@ fake_link.best_effort = True
 rflink1 = request.RFLink("rflink1")
 rflink1.addInterface(enb1_ue_rf)
 rflink1.addInterface(ue_enb1_rf)
+
+rflink2 = request.RFLink("rflink2")
+rflink2.addInterface(enb2_ue_rf)
+rflink2.addInterface(ue_enb2_rf)
 
 
 rflink_fake = request.RFLink("rflink_fake")
