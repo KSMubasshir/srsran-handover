@@ -16,7 +16,7 @@ sudo apt install -y software-properties-common
 sudo add-apt-repository -y ppa:open5gs/latest
 sudo apt update
 sudo apt install -y open5gs
-sudo cp /local/repository/etc/open5gs/* /etc/open5gs/
+sudo cp /local/repository/etc/open5gsFake/* /etc/open5gs/
 
 sudo systemctl restart open5gs-mmed
 sudo systemctl restart open5gs-sgwcd
